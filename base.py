@@ -12,7 +12,7 @@ def add_task(event=None):
         task_label.insert(0, entry_text)
         task_label.grid(row=new_task, column=0, pady=(5, 0), padx=(5, 0))
 
-        confirm_button = ctk.CTkButton(root_scroll, text="✓", height=75, width=75, fg_color="#119702")
+        confirm_button = ctk.CTkButton(root_scroll, text="✓", height=75, width=75, command=confirm_task, fg_color="#119702")
         confirm_button.grid(row=new_task, column=1, pady=(5, 0))
 
         tasks_list.append(task_label)
@@ -42,12 +42,12 @@ root_scroll = ctk.CTkScrollableFrame(root_frame, width=550, height=250, corner_r
 root_scroll.grid(pady=(20, 0), padx=50, row=2)
 
 task_entry = ctk.CTkEntry(root_frame, placeholder_text="Впишите задачу...", width=550, height=75, font=("Arial", 20))
-task_entry.grid(row=0, pady=5)
+task_entry.grid(row=0, pady=10)
 
 add_task_button = ctk.CTkButton(root_frame, text="Добавить новую задачу", command=add_task, font=("Arial", 20), width=550, height=75, border_width=1, border_color="#000000")
 add_task_button.grid(row=1, pady=5)
 
 close_button = ctk.CTkButton(root_frame, text="Выйти", font=("Arial", 20), command=root.destroy, border_width=1, border_color="#000000", width=183, height=60)
-close_button.grid(row=3, padx=(400, 0), pady=(10, 0))
+close_button.grid(row=3, padx=(400, 0), pady=(5, 0))
 
 root.mainloop()
