@@ -2,27 +2,59 @@ import customtkinter as ctk
 
 tasks_list = []
 
+def time_valid(*args):
+    text_if_allowed = args[0]
+    inserted_char = args[1]
+    action_type = args[2]
+
+    if action_type == "0":
+        return True
+    if action_type == "1":
+        return inserted_char.isdigit()
+    return True
+
 def add_task(event=None):
     entry_text = task_entry.get()
     len(tasks_list)
 
     if entry_text:
-        new_task = len(tasks_list)
-        task_label = ctk.CTkEntry(root_scroll, width=470, height=75, font=("Arial", 20))
+        new_task = len(tasks_list) * 2
+        setting_task = new_task + 1
+        task_label = ctk.CTkEntry(root_scroll, width=470, height=75, font=("Arial", 25), text_color="#DCE4EE", fg_color="#343638")
         task_label.insert(0, entry_text)
-        task_label.grid(row=new_task, column=0, pady=(5, 0), padx=(5, 0))
+        task_label.grid(row=new_task, column=0, columnspan=3, pady=(5, 0), padx=(30, 0))
 
-        confirm_button = ctk.CTkButton(root_scroll, text="✓", height=75, width=75, command=confirm_task, fg_color="#119702")
-        confirm_button.grid(row=new_task, column=1, pady=(5, 0))
+        confirm_button = ctk.CTkButton(root_scroll, text="✓", height=75, width=156.666666667, command=lambda: confirm_task(task_label, confirm_button), fg_color="#119702", font=("Arial", 40), border_color="#000000", border_width=1)
+        confirm_button.grid(row=setting_task, column=0, pady=(5, 0), padx=(30, 0))
+
+        delete_button = ctk.CTkButton(root_scroll, text="X", height=75, width=156.666666667, command=lambda: delete_task(task_label, confirm_button, delete_button, time_button), fg_color="#BA0202", font=("Arial", 40), border_color="#000000", border_width=1)
+        delete_button.grid(row=setting_task, column=1, pady=(5, 0), padx=(5, 0))
+
+        time_button = ctk.CTkEntry(root_scroll, placeholder_text = "00:00", height=75, width=156.666666667, validate="key", validatecommand=(v_cmd, "%P", "%S", "%d"), fg_color="#0E0D0D", font=("Arial", 55))
+        time_button.grid(row=setting_task, column=2, pady=(5, 0), padx=(5, 0))
 
         tasks_list.append(task_label)
         task_entry.delete(0, "end")
+
+def reconfirm_task(task_label, confirm_button):
+    task_label.configure(text_color="#DCE4EE", fg_color="#343638", state="normal")
+    confirm_button.configure(command=lambda t=task_label, b=confirm_button: confirm_task(t, b), fg_color="#119702")
         
-def confirm_task(event):
-    e
+def confirm_task(task_label, confirm_button):
+    task_label.configure(text_color="#464646", fg_color="#1AFF00", state="disabled")
+    confirm_button.configure(command=lambda t=task_label, b=confirm_button: reconfirm_task(t, b), fg_color="#2E2E2E")
+
+def delete_task(task_label, confirm_button, delete_button, time_button):
+    task_label.destroy()
+    confirm_button.destroy()
+    delete_button.destroy()
+    time_button.destroy()
+    tasks_list.remove(task_label)
 
 root = ctk.CTk()
 root.geometry("700x575+1210+10")
+
+v_cmd = root.register(time_valid)
 
 ctk.set_appearance_mode("dark")
 ctk.deactivate_automatic_dpi_awareness()
