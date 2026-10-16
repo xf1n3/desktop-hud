@@ -3,7 +3,6 @@ import customtkinter as ctk
 tasks_list = []
 
 
-
 def add_task(event=None):
     entry_text = task_entry.get()
     len(tasks_list)
@@ -21,7 +20,7 @@ def add_task(event=None):
         delete_button = ctk.CTkButton(root_scroll, text="X", height=75, width=156.666666667, command=lambda: delete_task(task_label, confirm_button, delete_button, time_button), fg_color="#BA0202", font=("Arial", 40), border_color="#000000", border_width=1)
         delete_button.grid(row=setting_task, column=1, pady=(5, 0), padx=(5, 0))
 
-        time_button = ctk.CTkEntry(root_scroll, placeholder_text = "00:00", height=75, width=156.666666667, fg_color="#0E0D0D", font=("Arial", 55))
+        time_button = ctk.CTkButton(root_scroll, text = "00:00", height=75, width=156.666666667, command=lambda: time_update(time_button), fg_color="#0E0D0D", font=("Arial", 55))
         time_button.grid(row=setting_task, column=2, pady=(5, 0), padx=(5, 0))
 
         tasks_list.append(task_label)
@@ -41,6 +40,16 @@ def delete_task(task_label, confirm_button, delete_button, time_button):
     delete_button.destroy()
     time_button.destroy()
     tasks_list.remove(task_label)
+
+def time_update(time_button):
+    get_hour = time_button.cget("text")
+    current_hour = get_hour[:2]
+    prefinish_hour = int(current_hour)
+    added_hour = prefinish_hour + 1
+    none_hour = added_hour % 24
+    finish_hour = f"{none_hour:02d}"
+    time_button.configure(text=finish_hour + ":00")
+
 
 root = ctk.CTk()
 root.geometry("700x575+1210+10")
