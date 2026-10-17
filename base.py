@@ -1,7 +1,17 @@
 import customtkinter as ctk
-
+from datetime import datetime
+from playsound3 import playsound
 tasks_list = []
 
+def check_time():
+    current_time = datetime.now().strftime("%H:%M")
+    for item in tasks_list:
+        if item["task"].cget("state") != "disabled":
+            task_time = item["time"].cget("text")
+
+            if current_time == task_time:
+                playsound("notification.mp3")
+    root.after(10000, check_time)
 
 def add_task(event=None):
     entry_text = task_entry.get()
@@ -23,7 +33,7 @@ def add_task(event=None):
         time_button = ctk.CTkButton(root_scroll, text = "00:00", height=75, width=156.666666667, command=lambda: time_update(time_button), fg_color="#0E0D0D", font=("Arial", 55))
         time_button.grid(row=setting_task, column=2, pady=(5, 0), padx=(5, 0))
 
-        tasks_list.append(task_label)
+        tasks_list.append({"task": task_label, "time": time_button})
         task_entry.delete(0, "end")
 
 def reconfirm_task(task_label, confirm_button):
@@ -39,7 +49,10 @@ def delete_task(task_label, confirm_button, delete_button, time_button):
     confirm_button.destroy()
     delete_button.destroy()
     time_button.destroy()
-    tasks_list.remove(task_label)
+    for item in tasks_list:
+        if item["task"] == task_label:
+            tasks_list.remove(item)
+            break
 
 def time_update(time_button):
     get_hour = time_button.cget("text")
@@ -82,4 +95,5 @@ add_task_button.grid(row=1, pady=5)
 close_button = ctk.CTkButton(root_frame, text="Выйти", font=("Arial", 20), command=root.destroy, border_width=1, border_color="#000000", width=183, height=60)
 close_button.grid(row=3, padx=(400, 0), pady=(5, 0))
 
+root.after(10000, check_time)
 root.mainloop()
